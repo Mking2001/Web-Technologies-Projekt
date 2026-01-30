@@ -299,3 +299,7 @@ psql -U postgres -d hollauf -f backend/database_schema.sql
 
 Dieses Projekt wurde im Rahmen des Web-Technologies-Kurses erstellt.
 Es handelt sich hioerbei um eine Dokumentation, bei der die Struktur des Projekts und die Funktionalität detailliert erläutert wird. Ebenso wurde die Datenbank-Struktur und die API-Dokumentation detailliert erläutert. Für Genauere Informationen zur Struktur des Projekts und der Funktionalität empfehlen wir die einzelnen Module zu lesen und deren Kommentare zu beachten.
+
+## Fremde und externe Quellen
+
+Für dieses Projekt wurde zur besseren Lesbarkeit des Codes und der ReadMe ebenso wie für die Erstellung von sinnvollen Kommentaren und Best-Practice Verbesserungen im Code unter anderem die Hilfe von Gemini 3.0 (AI) benutzt. Dabei ist allerdings der Code Eigenleistung und KI wurde nur für Best-Practices von bereits bestehendem Code und für Fehlerbehandlung und Lösungswege von sonstig nicht lösbaren Code-Problematiken angewendet. 
