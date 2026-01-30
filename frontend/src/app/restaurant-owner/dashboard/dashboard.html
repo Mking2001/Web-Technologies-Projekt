@@ -1,0 +1,85 @@
+<div class="page-wrapper">
+  <header class="top-nav">
+    <div class="brand">Hol & Lauf Partner</div>
+    <nav class="main-nav">
+      <a routerLink="/restaurant-owner/dashboard" routerLinkActive="active">Live Orders</a>
+      <a routerLink="/restaurant-owner/menu" routerLinkActive="active">Menu Management</a>
+      <a routerLink="/restaurant-owner/orders" routerLinkActive="active">Statistics</a>
+      <a routerLink="/restaurant-owner/profile" routerLinkActive="active">Profile</a>
+    </nav>
+    <div class="restaurant-info">
+      Restaurant: <strong>{{ restaurantName }}</strong>
+      <button class="btn-logout" (click)="onLogout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="kanban-board">
+    <div class="column">
+      <div class="column-header">
+        <span>New Incoming</span>
+        <span class="badge">{{ incomingOrders.length }}</span>
+      </div>
+      <div class="order-list">
+        <div class="order-card" *ngFor="let order of incomingOrders">
+          <div class="order-meta">Order #{{order.id}} • {{order.time}}</div>
+          <div class="order-items">
+            <div *ngFor="let item of order.items">{{item.count}}x {{item.name}}</div>
+          </div>
+
+
+          <div class="delivery-info">
+            <span class="zone-badge"> {{ order.customer_zone_name }}</span>
+            <span class="delivery-time"> {{ order.deliveryTime }} min Lieferzeit</span>
+          </div>
+
+
+          <div class="prep-time-input">
+            <label>Zubereitungszeit (min):</label>
+            <input type="number" [(ngModel)]="prepTimes[order.id]" min="5" max="120" class="time-input">
+            <span class="total-time">
+              = {{ getTotalTime(order.id, order.customer_zone) }} min gesamt
+            </span>
+          </div>
+
+          <div class="order-actions">
+            <button class="btn-reject" (click)="rejectOrder(order.id)">Ablehnen</button>
+            <div class="order-price">€ {{order.total_amount | number:'1.2-2'}}</div>
+            <button class="btn-accept" (click)="acceptOrder(order.id, order.customer_zone)">ACCEPT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="column-header">
+        <span>Preparing</span>
+        <span class="badge">{{ preparingOrders.length }}</span>
+      </div>
+      <div class="order-list">
+        <div class="order-card status-preparing" *ngFor="let order of preparingOrders">
+          <div class="order-meta">Order #{{order.id}}</div>
+          <div class="order-items">
+            <div *ngFor="let item of order.items">{{item.count}}x {{item.name}}</div>
+          </div>
+          <button class="btn-ready" (click)="markAsReady(order.id)">MARK READY</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="column-header">
+        <span>Ready for Pickup</span>
+        <span class="badge">{{ readyOrders.length }}</span>
+      </div>
+      <div class="order-list">
+        <div class="order-card status-ready" *ngFor="let order of readyOrders">
+          <div class="order-meta">Order #{{order.id}}</div>
+
+          <button class="btn-dispatch" (click)="dispatchOrder(order.id)">
+            FAHRER LOSSCHICKEN
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

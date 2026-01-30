@@ -1,0 +1,65 @@
+<div class="restaurants-container">
+    <h2>Restaurant Moderation</h2>
+
+    <div class="section pending-section">
+        <h3>Pending Approvals ({{ pendingRestaurants.length }})</h3>
+        <div class="card-grid">
+            <div *ngFor="let r of pendingRestaurants" class="restaurant-card warning">
+                <div class="card-content">
+                    <h4>{{ r.name }}</h4>
+                    <p><strong>Owner:</strong> {{ r.owner_email }}</p>
+                    <p><strong>Addr:</strong> {{ r.address }}</p>
+                    <small>Applied: {{ r.created_at | date:'medium' }}</small>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-approve" (click)="approve(r.id)">Approve</button>
+                    <button class="btn-reject" (click)="reject(r.id)">Reject</button>
+                </div>
+            </div>
+            <p *ngIf="pendingRestaurants.length === 0" style="color: #999; font-style: italic;">Keine offenen Anfragen.</p>
+        </div>
+    </div>
+
+    <hr style="margin: 40px 0; border: 0; border-top: 1px solid #eee;">
+
+    <div class="section active-section">
+        <h3>Active Restaurants ({{ activeRestaurants.length }})</h3>
+        
+        <div class="table-container" *ngIf="activeRestaurants.length > 0">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Owner</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let r of activeRestaurants | slice: (currentPage-1) * pageSize : currentPage * pageSize">
+                        <td>#{{ r.id }}</td>
+                        <td><strong>{{ r.name }}</strong></td>
+                        <td>{{ r.owner_email }}</td>
+                        <td>{{ r.phone }}</td>
+                        <td>{{ r.address }}</td>
+                        <td><span class="badge-active">Active</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination" *ngIf="activeRestaurants.length > pageSize">
+            <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">❮ Previous</button>
+            <button class="page-btn active">{{ currentPage }}</button>
+            <button class="page-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages">Next ❯</button>
+        </div>
+        
+        <p *ngIf="activeRestaurants.length > 0" style="text-align: center; color: #999; font-size: 12px; margin-top: 10px;">
+            Showing {{ (currentPage - 1) * pageSize + 1 }} - 
+            {{ (currentPage * pageSize) > activeRestaurants.length ? activeRestaurants.length : (currentPage * pageSize) }} 
+            of {{ activeRestaurants.length }} results
+        </p>
+    </div>
+</div>

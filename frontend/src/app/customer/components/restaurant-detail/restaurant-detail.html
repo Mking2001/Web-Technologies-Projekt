@@ -1,0 +1,207 @@
+@if (isLoading()) {
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p>Lade Restaurant...</p>
+  </div>
+} 
+
+@else if (errorMessage()) {
+  <div class="error-container">
+    <h2>Upps!</h2>
+    <p>{{ errorMessage() }}</p>
+    <a routerLink="/" class="back-btn">Zurück zur Übersicht</a>
+  </div>
+}
+
+@else if (restaurant(); as r) {
+  
+  <header class="detail-header">
+    <a (click)="goBack()" class="back-floating-btn" style="cursor: pointer;">
+      <span class="arrow">←</span> Zurück
+    </a>
+
+    <div class="banner-image" [style.backgroundImage]="'url(' + (r.bannerUrl || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1000&q=80') + ')'">
+      <div class="overlay"></div>
+    </div>
+
+    <div class="header-content">
+      <div class="restaurant-card">
+        <div class="card-top">
+          <h1>{{ r.name }}</h1>
+          
+          @if ((r.rating || 0) > 0) {
+            <div class="rating-badge">
+              <span class="star">★</span> {{ r.rating }} <span class="count">({{ r.ratingCount || 0 }}+)</span>
+            </div>
+          }
+        </div>
+        
+        <div class="tags">
+          @for (tag of r.tags; track tag) {
+            <span class="tag">{{ tag }}</span>
+          }
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="menu-nav">
+    <div class="nav-container">
+      @for (category of menu(); track category.id) {
+        <button class="nav-link" (click)="scrollToCategory(category.id)">
+          {{ category.name }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="menu-container">
+    <div class="menu-layout">
+      
+      <div class="menu-content">
+        
+        @for (category of menu(); track category.id) {
+          <div [id]="category.id" class="menu-category">
+            <h2 class="category-title">{{ category.name }}</h2>
+            
+            <div class="dish-grid text-only">
+              @for (dish of category.dishes; track dish.id) {
+                <div class="dish-card no-image">
+                  <div class="dish-info">
+                    <div class="dish-header">
+                      <h3>{{ dish.name }}</h3>
+                      <span class="price">{{ dish.price | currency:'EUR' }}</span>
+                    </div>
+                    <p class="dish-desc">{{ dish.description }}</p>
+                  </div>
+                  
+                  <div class="dish-action">
+                    <button class="add-btn-modern" (click)="addToCart(dish)">
+                      Hinzufügen <span class="plus">+</span>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (menu().length === 0) {
+          <div class="empty-menu">
+            <p>Dieses Restaurant hat noch keine Gerichte eingetragen.</p>
+          </div>
+        }
+
+        <hr class="section-divider" style="margin: 40px 0; border: 0; border-top: 1px solid #eee;">
+
+        <div class="reviews-section">
+          <h2 class="section-title">Kundenbewertungen</h2>
+
+          <div class="write-review-box">
+            <h3>Bewertung abgeben</h3>
+            
+            <div class="rating-input">
+              <span class="label">Deine Note:</span>
+              <div class="stars">
+                @for (star of [1,2,3,4,5]; track star) {
+                  <span 
+                    class="star-btn" 
+                    [class.active]="star <= newRating()"
+                    (click)="setRating(star)">
+                    ★
+                  </span>
+                }
+              </div>
+            </div>
+
+            <textarea 
+              rows="3" 
+              placeholder="Wie hat es dir geschmeckt?" 
+              [(ngModel)]="newComment"
+              class="review-textarea">
+            </textarea>
+
+            <button 
+              class="submit-review-btn" 
+              (click)="submitReview()" 
+              [disabled]="isSubmitting()">
+              {{ isSubmitting() ? 'Wird gesendet...' : 'Bewertung senden' }}
+            </button>
+          </div>
+        
+          @if (reviews().length === 0) {
+            <div class="empty-reviews">
+              <p>Noch keine Bewertungen vorhanden. Sei der Erste!</p>
+            </div>
+          }
+        
+          <div class="reviews-list">
+            @for (review of reviews(); track review.id) {
+              <div class="review-card">
+                <div class="review-header">
+                  <span class="user-name">{{ review.first_name }} {{ review.last_name?.charAt(0) }}.</span>
+                  <span class="review-date">{{ review.created_at | date:'mediumDate' }}</span>
+                </div>
+                
+                <div class="star-rating">
+                  @for (star of getStars(review.rating); track $index) {
+                    <span class="star">★</span>
+                  }
+                  <span class="rating-number">({{ review.rating }}/5)</span>
+                </div>
+        
+                <p class="review-text">"{{ review.comment }}"</p>
+              </div>
+            }
+          </div>
+        </div>
+
+      </div>
+
+      <div class="cart-sidebar">
+        <div class="mini-cart">
+          <h3>Dein Warenkorb</h3>
+
+          @if (cartService.count() === 0) {
+            <div class="empty-cart-msg">
+              <p>Wähle leckere Gerichte aus!</p>
+            </div>
+            <button class="checkout-btn" disabled>Zur Kasse</button>
+          } @else {
+            <div class="cart-items-list">
+              @for (item of cartService.items(); track item.id) {
+                <div class="mini-cart-item">
+                  
+                  <div class="item-left">
+                    <span class="qty">{{ item.quantity }}x</span>
+                    <span class="name">{{ item.name }}</span>
+                  </div>
+
+                  <div class="item-right">
+                    <span class="price">{{ (item.price * item.quantity) | currency:'EUR' }}</span>
+                    <button class="remove-item-btn" (click)="removeItem(item.id)" title="Entfernen">
+                      &times;
+                    </button>
+                  </div>
+
+                </div>
+              }
+              
+              <div class="divider"></div>
+              
+              <div class="cart-total">
+                <span>Gesamt</span>
+                <strong>{{ cartService.subTotal() | currency:'EUR' }}</strong>
+              </div>
+            </div>
+            
+            <button class="checkout-btn active" routerLink="/customer/cart">
+              Bezahlen ({{ cartService.subTotal() | currency:'EUR' }})
+            </button>
+          }
+        </div>
+      </div>
+
+    </div> 
+  </div> 
+}

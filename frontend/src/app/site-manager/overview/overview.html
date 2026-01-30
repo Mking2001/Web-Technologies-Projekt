@@ -1,0 +1,73 @@
+<div class="overview-container">
+    
+    <div class="header">
+        <h2>Global Transaction History</h2>
+        <p>Live-Monitoring aller Bestellungen auf der Plattform.</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Users</h3>
+            <div class="value">{{ stats.users | number }}</div>
+        </div>
+        <div class="stat-card">
+            <h3>Total Orders</h3>
+            <div class="value">{{ stats.orders | number }}</div>
+        </div>
+        <div class="stat-card">
+            <h3>Revenue (Total)</h3>
+            <div class="value highlight">{{ stats.revenue | currency:'EUR' }}</div>
+        </div>
+    </div>
+
+    <div class="search-container">
+        <input 
+            type="text" 
+            placeholder="Search restaurant or customer..." 
+            [(ngModel)]="searchTerm" 
+            (keyup.enter)="onSearch()"
+            class="search-input"
+        >
+        <button class="btn-search" (click)="onSearch()">Filter</button>
+        <button *ngIf="searchTerm" class="btn-clear" (click)="searchTerm=''; onSearch()">Clear</button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th (click)="onSort('id')" class="sortable">ID {{ getSortIcon('id') }}</th>
+                    <th (click)="onSort('created_at')" class="sortable">Datum {{ getSortIcon('created_at') }}</th>
+                    <th (click)="onSort('customer')" class="sortable">Kunde {{ getSortIcon('customer') }}</th>
+                    <th (click)="onSort('restaurant')" class="sortable">Restaurant {{ getSortIcon('restaurant') }}</th>
+                    <th (click)="onSort('total_amount')" class="sortable">Betrag {{ getSortIcon('total_amount') }}</th>
+                    <th (click)="onSort('status')" class="sortable">Status {{ getSortIcon('status') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let o of orders">
+                    <td>#{{ o.id }}</td>
+                    <td>{{ o.created_at | date:'short' }}</td>
+                    <td>{{ o.customer }}</td>
+                    <td><strong>{{ o.restaurant }}</strong></td>
+                    <td class="amount">{{ o.total_amount | currency:'EUR' }}</td>
+                    <td>
+                        <span class="badge" [class.delivered]="o.status === 'delivered'">
+                            {{ o.status }}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div *ngIf="orders.length === 0" class="empty-state">
+            Keine Transaktionen gefunden.
+        </div>
+    </div>
+
+    <div class="pagination" *ngIf="totalItems > 0">
+        <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">❮ Previous</button>
+        <span class="page-info">Seite {{ currentPage }} von {{ totalPages }} ({{ totalItems }})</span>
+        <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">Next ❯</button>
+    </div>
+</div>

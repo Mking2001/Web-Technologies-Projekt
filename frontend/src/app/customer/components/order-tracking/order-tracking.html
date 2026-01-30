@@ -1,0 +1,84 @@
+<div class="tracking-container">
+  <nav class="tracking-nav">
+    <button (click)="goBack()" class="back-btn">Zurück</button>
+    <span class="order-id">Bestellung #{{ orderId }}</span>
+  </nav>
+
+  <div class="status-banner" [ngClass]="orderStatus()">
+    @switch (orderStatus()) {
+    @case ('processing') { <span>Wartet auf Bestätigung...</span> }
+    @case ('preparing') { <span>Wird zubereitet...</span> }
+    @case ('ready') { <span> Bereit zur Abholung...</span> }
+    @case ('on_the_way') { <span>Fahrer ist unterwegs!</span> }
+    @case ('delivered') { <span> Zugestellt</span> }
+    @default { <span>Lade Status...</span> }
+    }
+  </div>
+
+  <div class="map-grid-wrapper">
+    <div class="map-grid">
+      @for (row of grid(); track rowIndex; let rowIndex = $index) {
+      <div class="grid-row">
+        @for (cell of row; track cellIndex; let cellIndex = $index) {
+        <div class="grid-cell" [ngClass]="{
+                   'building': cell === 'building',
+                   'road': cell === 'road',
+                   'restaurant': cellIndex === restaurantPos.x && rowIndex === restaurantPos.y,
+                   'customer': cellIndex === customerPos.x && rowIndex === customerPos.y,
+                   'path-segment': pathSet().has(cellIndex + ',' + rowIndex) && cell !== 'building'
+                 }">
+
+          @if (riderPos().x === cellIndex && riderPos().y === rowIndex) {
+          <div class="rider-marker">🛵</div>
+          }
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="status-footer">
+    @if (!isDelivered()) {
+    <div class="eta-box">
+      @if (orderStatus() === 'on_the_way') {
+      <span class="label">Ankunft in ca.</span>
+      <h2 class="time">{{ timeLeft() | number:'1.0-0' }} min</h2>
+      } @else if (orderStatus() === 'preparing') {
+      <span class="label">Geschätzte Lieferung</span>
+      <h2 class="time">{{ estimatedMinutes() }} min</h2>
+      <div class="time-breakdown" *ngIf="prepTime() > 0">
+        <span>🍳 {{ prepTime() }} min Zubereitung</span>
+        <span>+</span>
+        <span>🚴 {{ deliveryTime() }} min Lieferung</span>
+      </div>
+      } @else if (orderStatus() === 'ready') {
+      <span class="label">Bereit zur Abholung</span>
+      <h2 class="time">Fahrer kommt gleich</h2>
+      } @else {
+      <span class="label">Status</span>
+      <h2 class="time">Warten...</h2>
+      }
+    </div>
+
+    <p class="status-msg">
+      @if (orderStatus() === 'on_the_way') {
+      Dein Fahrer folgt der schnellsten Route.
+      } @else if (orderStatus() === 'preparing') {
+      Dein Essen wird gerade zubereitet.
+      } @else if (orderStatus() === 'ready') {
+      Deine Bestellung ist fertig und wartet auf den Fahrer.
+      } @else {
+      Das Restaurant bearbeitet deine Bestellung.
+      }
+    </p>
+
+    } @else {
+    <div class="success-box">
+      <h2>Angekommen!</h2>
+      <p>Guten Appetit!</p>
+      <button (click)="goBack()" class="finish-btn">Schließen</button>
+    </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,102 @@
+<div class="page-wrapper">
+  <header class="top-nav">
+    <div class="brand">Hol & Lauf Partner</div>
+    <nav class="main-nav">
+      <a routerLink="/restaurant-owner/dashboard" routerLinkActive="active">Live Orders</a>
+      <a routerLink="/restaurant-owner/menu" routerLinkActive="active">Menu Management</a>
+      <a routerLink="/restaurant-owner/orders" routerLinkActive="active">Statistics</a>
+      <a routerLink="/restaurant-owner/profile" routerLinkActive="active">Profile</a>
+    </nav>
+    <div class="restaurant-info">
+      Restaurant: <strong>{{ restaurantName }}</strong>
+      <button class="btn-logout" (click)="onLogout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="content-area">
+    <div class="header-actions">
+      <h1>Statistiken & Analysen</h1>
+    </div> 
+    
+    <div class="stats-grid">
+      <div class="card stat-card">
+        <h3>Bestellungen (Heute)</h3>
+        <p class="stat-value">{{ stats.todayOrderCount }}</p> 
+      </div>
+      <div class="card stat-card">
+        <h3>Umsatz (Woche)</h3>
+        <p class="stat-value">€ {{ stats.weeklyRevenue | number:'1.2-2' }}</p>
+      </div>
+      <div class="stats-card">
+  <h3>Beliebteste Gerichte</h3>
+  <ul>
+    <li *ngFor="let dish of stats.topDishes">
+  <span>{{ dish.dish_name }}</span>
+  <strong>{{ dish.order_count }}x</strong> </li>
+  </ul>
+</div>
+    </div>
+
+    <div class="header-actions" style="margin-top: 2rem;">
+      <h1>Treueprogramm & Belohnungen</h1>
+      <button class="btn-primary" (click)="toggleRewardForm()">
+        {{ showRewardForm ? 'Abbrechen' : '+ Neue Belohnung erstellen' }}
+      </button>
+    </div>
+
+    <div class="card form-card" *ngIf="showRewardForm" style="margin-bottom: 20px;">
+      <h3>Neue Belohnung hinzufügen</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Name der Belohnung</label>
+          <input type="text" [(ngModel)]="newReward.name" placeholder="z.B. Gratis Dessert">
+        </div>
+        <div class="form-group">
+          <label>Punkte-Kosten</label>
+          <input type="number" [(ngModel)]="newReward.points" placeholder="z.B. 50">
+        </div>
+        <div class="form-group">
+          <label>Typ der Belohnung</label>
+          <select [(ngModel)]="newReward.type">
+            <option value="fixed_amount">Fixer Rabatt (€)</option>
+            <option value="percentage">Prozentualer Rabatt (%)</option>
+            <option value="free_product">Gratis Produkt</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Wert (falls Rabatt)</label>
+          <input type="number" [(ngModel)]="newReward.value" placeholder="z.B. 5.00">
+        </div>
+      </div>
+      <button class="btn-save" style="margin-top: 15px;" (click)="createReward()">In Datenbank speichern</button>
+    </div>
+    
+    <div class="card">
+      <h3>Aktive Belohnungen für Kunden</h3>
+      <table *ngIf="rewards.length > 0">
+        <thead>
+          <tr>
+            <th>Belohnung</th>
+            <th>Punkte-Kosten</th>
+            <th>Typ</th>
+            <th>Aktion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reward of rewards">
+            <td>{{ reward.name }}</td>
+            <td>{{ reward.points }} Pkt.</td>
+            <td>{{ reward.type }}</td>
+            <td>
+              <button class="btn-delete" (click)="deleteReward(reward.id)">Löschen</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty-state" *ngIf="rewards.length === 0">
+        <p>Noch keine Belohnungen definiert.</p>
+      </div>
+    </div>
+  </main>
+</div>

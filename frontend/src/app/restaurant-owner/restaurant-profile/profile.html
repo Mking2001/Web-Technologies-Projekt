@@ -1,0 +1,86 @@
+<div class="page-wrapper">
+  <header class="top-nav">
+    <div class="brand">Hol & Lauf Partner</div>
+    <nav class="main-nav">
+      <a routerLink="/restaurant-owner/dashboard" routerLinkActive="active">Live Orders</a>
+      <a routerLink="/restaurant-owner/menu" routerLinkActive="active">Menu Management</a>
+      <a routerLink="/restaurant-owner/orders" routerLinkActive="active">Statistics</a>
+      <a routerLink="/restaurant-owner/profile" routerLinkActive="active">Profile</a>
+    </nav>
+    <div class="restaurant-info">
+      Restaurant: <strong>{{ restaurantName }}</strong>
+      <button class="btn-logout" (click)="onLogout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="content-area">
+    <div class="header-actions">
+      <h1>Restaurant Profil bearbeiten</h1>
+      <button class="btn-primary" (click)="saveProfile()">Profil speichern</button>
+    </div>
+
+    <div class="card profile-card">
+      <div class="form-section">
+        <h3>Allgemeine Informationen</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Name des Restaurants</label>
+            <input type="text" [(ngModel)]="profile.name">
+          </div>
+          <div class="form-group">
+            <label>Telefonnummer</label>
+            <input type="text" [(ngModel)]="profile.phone">
+          </div>
+          <div class="form-group full-width">
+            <label>Beschreibung</label>
+            <textarea [(ngModel)]="profile.description" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Standort & Liefergebiete</h3>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label>Straße und Hausnummer</label>
+            <input type="text" [(ngModel)]="profile.address">
+          </div>
+          
+          <div class="form-group">
+            <label>Lieferzone</label>
+            <select [(ngModel)]="profile.delivery_zone">
+              <option [ngValue]="null" disabled>Zone wählen...</option>
+              <option *ngFor="let zone of availableZones" [value]="zone.name">
+                {{ zone.name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Postleitzahl (PLZ)</label>
+            <select [(ngModel)]="profile.zip_code">
+              <option value="" disabled>PLZ wählen...</option>
+              <option *ngFor="let zone of availableZones" [value]="zone.zip">
+                {{ zone.zip }} ({{ zone.name }})
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Öffnungszeiten</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tage (z.B. Mo-So)</label>
+            <input type="text" [(ngModel)]="profile.opening_days">
+          </div>
+          <div class="form-group">
+            <label>Uhrzeit (z.B. 11:00 - 22:00)</label>
+            <input type="text" [(ngModel)]="profile.opening_hours">
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

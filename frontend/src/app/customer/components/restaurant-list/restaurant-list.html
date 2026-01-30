@@ -1,0 +1,118 @@
+<div class="page-wrapper">
+  <nav class="top-nav">
+    <div class="nav-content">
+      <div class="brand" routerLink="/">Hol & Lauf</div>
+      <div class="user-actions">
+        <button class="text-btn" (click)="goToOrders()">Meine Bestellungen</button>
+        <button class="text-btn logout-btn" (click)="logout()">Abmelden</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero-banner">
+    <div class="hero-content">
+      <h1>Dein Lieblingsessen,<br>nur einen Klick entfernt.</h1>
+      <p>Entdecke die besten Restaurants in deiner Umgebung.</p>
+      
+      <div class="search-container">
+        <input 
+          type="text" 
+          placeholder="Nach Restaurant oder Küche suchen..." 
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event); filterRestaurants()"
+        >
+        <button class="search-btn">Finden</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="content-container">
+    @if (isLoading()) {
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Wir laden die Restaurants...</p>
+      </div>
+    }
+
+    @else {
+      @if (recommendations().length > 0 && searchTerm() === '') {
+        <section class="recommendation-section">
+          <h2 class="section-title">Unsere Empfehlungen</h2>
+          <div class="recommendation-grid">
+            @for (r of recommendations(); track r.id) {
+              <div class="restaurant-card featured" [routerLink]="['/customer/restaurant', r.id]">
+                <div class="card-image" [style.backgroundImage]="'url(' + (r.bannerUrl || 'assets/default-restaurant.jpg') + ')'">
+                  <div class="image-overlay">
+                    <span class="badge-recommendation">Topseller</span>
+                    <span class="delivery-time">{{ r.deliveryTime || '20-30 min' }}</span>
+                  </div>
+                </div>
+                <div class="card-details">
+                  <div class="card-header">
+                    <h3>{{ r.name }}</h3>
+                      <span class="rating-text">Note: {{ r.rating || 'N/A' }} ({{ r.ratingCount || 0 }})</span>
+                  </div>
+              
+                  <p class="stats-hint" style="font-size: 0.8rem; color: #666; margin: 4px 0;">
+                    {{ r.totalOrders || 0 }} Bestellungen gesamt
+                  </p>
+                  <div class="card-footer">
+                     <span class="fee-info">Mindestbestellwert: {{ (r.minOrder || 10) | currency:'EUR' }}</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+          <div class="section-divider"></div>
+        </section>
+      }
+
+      <h2 class="section-title">Alle Restaurants</h2>
+      <div class="restaurant-grid">
+        @for (r of filteredRestaurants(); track r.id) {
+          <div class="restaurant-card" [routerLink]="['/customer/restaurant', r.id]">
+            <div class="card-image" [style.backgroundImage]="'url(' + r.bannerUrl + ')'">
+              <div class="image-overlay">
+                @if (r.deliveryFee === 0) {
+                  <span class="badge-free">Gratis Lieferung</span>
+                }
+                <span class="delivery-time">{{ r.deliveryTime }}</span>
+              </div>
+            </div>
+            
+            <div class="card-details">
+              <div class="card-header">
+                <h3>{{ r.name }}</h3>
+                <span class="rating-text">Note: {{ r.rating || 'N/A' }} ({{ r.ratingCount || 0 }})</span>
+              </div>
+              
+              <div class="meta-info">
+                @for (tag of r.tags; track tag) {
+                  <span class="tag-item">{{ tag }}</span>
+                }
+              </div>
+
+              <div class="card-footer">
+                <div class="fee-info">
+                  <span>Min. {{ r.minOrder | currency:'EUR' }}</span>
+                  <span class="dot">•</span>
+                  <span [class.free]="r.deliveryFee === 0">
+                    Lieferung {{ r.deliveryFee === 0 ? 'kostenlos' : (r.deliveryFee | currency:'EUR') }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (filteredRestaurants().length === 0) {
+        <div class="empty-state">
+          <h3>Keine Ergebnisse</h3>
+          <p>Wir konnten kein Restaurant finden, das zu deiner Suche passt.</p>
+          <button class="reset-btn" (click)="searchTerm.set(''); filterRestaurants()">Suche zurücksetzen</button>
+        </div>
+      }
+    }
+  </main>
+</div>

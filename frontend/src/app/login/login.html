@@ -1,0 +1,53 @@
+<div class="login-wrapper">
+    
+    <div class="brand-section">
+        <div class="brand-content">
+            <h1>Schnell.<br>Frisch.<br>Geliefert.</h1>
+            <p>Die Plattform für deinen Hunger.</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="login-container">
+            
+            <div class="logo-wrapper">
+                <img src="logo.png" alt="Hol & Lauf Logo">
+            </div>
+
+            <h2>Willkommen zurück!</h2>
+            <p class="form-instruction">Bitte melde dich an, um fortzufahren.</p>
+
+            <form (ngSubmit)="onLogin()">
+                
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Email Adresse</mat-label>
+                    <input matInput [(ngModel)]="email" name="email" required>
+                    <mat-icon matSuffix>email</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Passwort</mat-label>
+                    <input matInput [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="password" name="password" required>
+                    <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                <button mat-raised-button class="login-btn" type="submit">
+                    LOGIN
+                </button>
+
+            </form>
+            
+            <div class="footer-links">
+                <a href="#">Passwort vergessen?</a>
+                <br><br>
+                <span>Noch kein Konto? </span>
+                <a class="highlight-link" (click)="navigateToRegister()">
+        Jetzt registrieren
+    </a>
+            </div>
+        </div>
+    </div>
+
+</div>

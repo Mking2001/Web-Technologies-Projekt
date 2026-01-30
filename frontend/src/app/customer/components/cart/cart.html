@@ -1,0 +1,120 @@
+<div class="cart-page">
+  <div class="container">
+
+    <h1 class="page-title">Dein Warenkorb</h1>
+
+    <div class="cart-layout" *ngIf="cartService.items().length > 0; else emptyState">
+
+      <div class="items-column">
+
+        <div class="cart-item-card" *ngFor="let item of cartService.items()">
+
+          <div class="item-main">
+            <div class="qty-control">
+              <button (click)="decreaseQty(item.id)" [disabled]="item.quantity <= 1">−</button>
+              <span>{{ item.quantity }}</span>
+              <button (click)="increaseQty(item.id)">+</button>
+            </div>
+
+            <div class="item-details">
+              <h3>{{ item.name }}</h3>
+              <p class="restaurant-ref">von {{ item.restaurantName }}</p>
+              <p class="desc" *ngIf="item.description">{{ item.description }}</p>
+            </div>
+          </div>
+
+          <div class="item-actions">
+            <span class="item-price">{{ (item.price * item.quantity) | currency:'EUR' }}</span>
+            <button class="remove-btn" (click)="removeItem(item.id)" title="Entfernen">
+              &times;
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="summary-column">
+        <div class="summary-card">
+          <h2>Zusammenfassung</h2>
+
+          <div class="points-display" *ngIf="userPoints() > 0">
+            <span class="points-label">Deine Punkte:</span>
+            <span class="points-value">{{ userPoints() }}</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Zwischensumme</span>
+            <span>{{ cartService.subTotal() | currency:'EUR' }}</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Lieferkosten</span>
+            <span [class.free]="deliveryFee() === 0">
+              {{ deliveryFee() === 0 ? 'Kostenlos' : (deliveryFee() | currency:'EUR') }}
+            </span>
+          </div>
+
+          <div class="summary-row discount" *ngIf="appliedVoucher() > 0">
+            <span>Gutschein</span>
+            <span>-{{ appliedVoucher() | currency:'EUR' }}</span>
+          </div>
+
+          <div class="summary-row discount" *ngIf="rewardDiscount() > 0">
+            <span>Belohnung</span>
+            <span>-{{ rewardDiscount() | currency:'EUR' }}</span>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="total-row">
+            <span>Gesamtsumme</span>
+            <span class="total-price">{{ totalPrice() | currency:'EUR' }}</span>
+          </div>
+          <small class="tax-note">Inkl. MwSt.</small>
+          <div class="rewards-section" *ngIf="availableRewards().length > 0">
+            <h3>Belohnungen einlösen</h3>
+            <div class="reward-item" *ngFor="let reward of availableRewards()">
+              <div class="reward-info">
+                <span class="reward-name">{{ reward.name }}</span>
+                <span class="reward-cost">{{ reward.points }} Punkte</span>
+              </div>
+              <button class="redeem-btn" [class.disabled]="!canAfford(reward) || appliedReward()"
+                [disabled]="!canAfford(reward) || appliedReward()" (click)="redeemReward(reward)">
+                {{ appliedReward()?.id === reward.id ? '✓ Eingelöst' : 'Einlösen' }}
+              </button>
+            </div>
+            <p class="reward-hint" *ngIf="userPoints() === 0">
+              Sammle Punkte bei deinen Bestellungen!
+            </p>
+          </div>
+
+          <div class="voucher-section">
+            <div class="input-group">
+              <input type="text" placeholder="Gutscheincode" [ngModel]="voucherCode()"
+                (ngModelChange)="voucherCode.set($event)">
+              <button (click)="applyVoucher()">Einlösen</button>
+            </div>
+            <p class="error-msg" *ngIf="voucherError()">{{ voucherError() }}</p>
+            <p class="success-msg" *ngIf="appliedVoucher() > 0">Gutschein erfolgreich!</p>
+          </div>
+
+          <button class="checkout-btn" (click)="checkout()">
+            Jetzt bestellen
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-cart-container">
+        <div class="empty-content">
+          <h2>Dein Warenkorb ist leer</h2>
+          <p>Hungrig? Suche dir jetzt etwas Leckeres aus!</p>
+          <a routerLink="/customer" class="btn-primary">Restaurants entdecken</a>
+        </div>
+      </div>
+    </ng-template>
+
+  </div>
+</div>

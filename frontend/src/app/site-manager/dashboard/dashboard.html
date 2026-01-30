@@ -1,0 +1,31 @@
+<div class="sidebar">
+    <h2>Hol & Lauf</h2>
+
+    <div class="menu-item" routerLink="/admin/overview" routerLinkActive="active">
+        Dashboard
+    </div>
+
+    <div class="menu-item" routerLink="/admin/users" routerLinkActive="active">
+        User Management
+    </div>
+
+    <div class="menu-item" routerLink="/admin/reports" routerLinkActive="active">
+        Reports & Analytics
+    </div>
+
+    <div class="menu-item" routerLink="/admin/restaurants" routerLinkActive="active">
+        Restaurants
+    </div>
+
+    <div class="menu-item" routerLink="/admin/settings" routerLinkActive="active">
+        Global Settings
+    </div>
+
+    <div class="menu-item logout" routerLink="/">
+        Logout
+    </div>
+</div>
+
+<div class="main">
+    <router-outlet></router-outlet>
+</div>

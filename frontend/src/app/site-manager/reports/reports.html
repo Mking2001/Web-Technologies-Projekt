@@ -1,0 +1,62 @@
+<div class="reports-container">
+    <h2>Platform Analytics & Audit Log</h2>
+
+    <div class="charts-section">
+        <div class="chart-card">
+            <h3>Revenue (Last 7 Days)</h3>
+            <div class="bar-chart">
+                <div *ngFor="let item of analyticsData.revenue" class="bar-group">
+                    <div class="bar" [style.height.px]="item.total / 5" [title]="item.total | currency:'EUR'"></div>
+                    <span class="label">{{ item.date | date:'dd.MM' }}</span>
+                </div>
+                <div *ngIf="analyticsData.revenue.length === 0" class="no-data">No data yet</div>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>User Logins (Last 7 Days)</h3>
+            <div class="bar-chart">
+                <div *ngFor=\"let item of analyticsData.logins\" class=\"bar-group\">\r\n <div class=\"bar blue\"
+                        [style.height.px]=\"Math.min(item.count * 10, 100)\" [title]=\"item.count\"></div>
+                    <span class="label">{{ item.date | date:'dd.MM' }}</span>
+                </div>
+                <div *ngIf="analyticsData.logins.length === 0" class="no-data">No data yet</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="logs-section">
+        <div class="header-row">
+            <h3>System Activity Log</h3>
+            <div class="search-box">
+                <input type="text" placeholder="Search logs..." [(ngModel)]="searchTerm" (keyup.enter)="onSearch()">
+                <button (click)="onSearch()">Search</button>
+            </div>
+        </div>
+
+        <table class="log-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let log of logs">
+                    <td>{{ log.created_at | date:'short' }}</td>
+                    <td>{{ log.user_email || 'System' }}</td>
+                    <td><span class="badge">{{ log.action }}</span></td>
+                    <td>{{ log.details }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage >= totalPages">Next</button>
+        </div>
+    </div>
+</div>

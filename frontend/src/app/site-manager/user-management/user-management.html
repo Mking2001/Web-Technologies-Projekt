@@ -1,0 +1,68 @@
+<div class="header-section" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>User Moderation</h2>
+    
+    <div class="search-box" style="display: flex; gap: 10px;">
+        <input 
+            type="text" 
+            placeholder="Suche User..." 
+            [(ngModel)]="searchTerm" 
+            (keyup.enter)="onSearch()"
+            style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 250px;">
+        <button (click)="onSearch()" class="action-btn">Suchen</button>
+        <button *ngIf="searchTerm" (click)="searchTerm=''; onSearch()" class="action-btn warn">X</button>
+    </div>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th (click)="onSort('id')" style="cursor: pointer;">ID {{ getSortIcon('id') }}</th>
+                <th (click)="onSort('last_name')" style="cursor: pointer;">User Name {{ getSortIcon('last_name') }}</th>
+                <th (click)="onSort('role')" style="cursor: pointer;">Role {{ getSortIcon('role') }}</th>
+                <th (click)="onSort('status')" style="cursor: pointer;">Status {{ getSortIcon('status') }}</th>
+                <th style="text-align: center;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users">
+                
+                <td>#{{ user.id }}</td>
+                <td>
+                    {{ user.first_name ? user.first_name + ' ' + user.last_name : user.email }}
+                    <br><small style="color:#999">{{ user.email }}</small>
+                </td>
+                <td>{{ user.role }}</td>
+                <td>
+                    <span class="status-badge" [ngClass]="user.status">
+                        {{ user.status | titlecase }}
+                    </span>
+                </td>
+                <td style="text-align: center;">
+                    <button class="action-btn"
+                            [class.warn]="user.status === 'active'"
+                            (click)="toggleStatus(user)">
+                        {{ user.status === 'active' ? 'Block' : 'Unblock' }}
+                    </button>
+                </td>
+            </tr>
+
+            <tr *ngIf="users.length === 0">
+                <td colspan="5" style="text-align: center; padding: 20px;">
+                    Keine User gefunden.
+                </td>
+            </tr>
+        </tbody>
+        </table>
+    </div> 
+
+<div class="pagination" *ngIf="totalItems > 0">
+    <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+    
+    <span style="font-size: 14px; color: #555;">
+        Seite <strong>{{ currentPage }}</strong> von {{ totalPages }} 
+        <small>(Gesamt: {{ totalItems }})</small>
+    </span>
+
+    <button class="page-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages">Next</button>
+</div>

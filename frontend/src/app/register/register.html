@@ -1,0 +1,86 @@
+<div class="login-wrapper">
+    <div class="brand-section">
+        <div class="brand-content">
+            <h1>Werde<br>Teil der<br>Familie.</h1>
+            <p>Erstelle dein Konto in Sekunden.</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="login-container">
+            <div class="logo-wrapper">
+                <img src="logo.png" alt="Logo"> 
+            </div>
+
+            <h2>Konto erstellen</h2>
+            
+            <div class="role-selection">
+                <label>Ich möchte...</label>
+                <mat-radio-group [(ngModel)]="role" name="role" class="role-group">
+                    <mat-radio-button value="customer">Essen bestellen</mat-radio-button>
+                    <mat-radio-button value="restaurant_owner">Restaurant anmelden</mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <form (ngSubmit)="onRegister()">
+                <div class="row-inputs">
+                    <mat-form-field appearance="outline" class="half-width">
+                        <mat-label>Vorname</mat-label>
+                        <input matInput [(ngModel)]="firstName" name="firstName" required>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="half-width">
+                        <mat-label>Nachname</mat-label>
+                        <input matInput [(ngModel)]="lastName" name="lastName" required>
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Liefergebiet (PLZ)</mat-label>
+                    <mat-select [(ngModel)]="selectedZip" name="zipCode" required>
+                        @for (zone of availableZones; track zone.zip) {
+                            <mat-option [value]="zone.zip">
+                                {{ zone.zip }} - {{ zone.name }} 
+                                <span *ngIf="zone.surge > 0" style="color: red; font-size: 0.8em; margin-left: 5px;">
+                                    (+{{ zone.surge | currency:'EUR' }})
+                                </span>
+                            </mat-option>
+                        }
+                    </mat-select>
+                    <mat-icon matSuffix>location_on</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Email Adresse</mat-label>
+                    <input matInput [(ngModel)]="email" name="email" type="email" required>
+                    <mat-icon matSuffix>email</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Passwort</mat-label>
+                    <input matInput [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="password" name="password" required>
+                    <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Passwort bestätigen</mat-label>
+                    <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+                    <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
+                        <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                <button mat-raised-button class="login-btn" type="submit">
+                    {{ role === 'customer' ? 'KUNDENKONTO ERSTELLEN' : 'ALS PARTNER REGISTRIEREN' }}
+                </button>
+            </form>
+            
+            <div class="footer-links">
+                <span>Bereits ein Konto? </span>
+                <a class="highlight-link" (click)="navigateToLogin()">Hier einloggen</a>
+            </div>
+        </div>
+    </div>
+</div>

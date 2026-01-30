@@ -1,0 +1,447 @@
+:host {
+  --primary: #ff8000;
+  --primary-hover: #e67300;
+  --bg-page: #f8f9fa;
+  --surface: #ffffff;
+  --text-main: #1a1a1a;
+  --text-sub: #666666;
+  --border-light: #eeeeee;
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --radius-card: 16px;
+  --radius-btn: 50px;
+}
+
+.cart-page {
+  background-color: var(--bg-page);
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 40px;
+  align-items: start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.items-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cart-item-card {
+  background: var(--surface);
+  padding: 24px;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .item-main {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      background: #f0f0f0;
+      border-radius: 12px;
+      padding: 4px;
+
+      button {
+        width: 32px;
+        height: 32px;
+        background: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s;
+
+        &:hover:not(:disabled) {
+          color: var(--primary);
+          transform: scale(1.1);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: default;
+        }
+      }
+
+      span {
+        min-width: 30px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+    }
+
+    .item-details {
+      h3 {
+        margin: 0 0 4px;
+        font-size: 1.1rem;
+        color: var(--text-main);
+      }
+
+      .restaurant-ref {
+        margin: 0 0 6px;
+        font-size: 0.8rem;
+        color: var(--primary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .desc {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--text-sub);
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .item-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    @media (max-width: 600px) {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .item-price {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    .remove-btn {
+      background: #fff0f0;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: #ff4d4d;
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #ff4d4d;
+        color: white;
+      }
+    }
+  }
+}
+
+.summary-column {
+  position: sticky;
+  top: 20px;
+}
+
+.summary-card {
+  background: var(--surface);
+  padding: 30px;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+
+  h2 {
+    margin-top: 0;
+    font-size: 1.4rem;
+    margin-bottom: 24px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: var(--text-sub);
+
+    .free {
+      color: #28a745;
+      font-weight: 600;
+    }
+
+    &.discount {
+      color: #28a745;
+    }
+  }
+
+  .divider {
+    border-bottom: 1px solid var(--border-light);
+    margin: 20px 0;
+  }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 5px;
+  }
+
+  .tax-note {
+    display: block;
+    text-align: right;
+    color: #999;
+    font-size: 0.8rem;
+    margin-bottom: 30px;
+  }
+
+  // Voucher Input
+  .voucher-section {
+    margin-bottom: 24px;
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+
+      input {
+        flex: 1;
+        padding: 12px 16px;
+        background: #f9f9f9;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        outline: none;
+        transition: all 0.2s;
+
+        &:focus {
+          background: white;
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(255, 128, 0, 0.1);
+        }
+      }
+
+      button {
+        padding: 0 20px;
+        background: var(--text-main);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+
+    .error-msg {
+      color: #ff4d4d;
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+
+    .success-msg {
+      color: #28a745;
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+  }
+
+  .checkout-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--primary);
+    border: none;
+    border-radius: var(--radius-btn);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 128, 0, 0.3);
+    transition: all 0.2s;
+
+    &:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 128, 0, 0.4);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  // NEU: Punkte-Anzeige
+  .points-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #fff7e6 0%, #ffe4b8 100%);
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+
+    .points-label {
+      font-weight: 600;
+      color: #b87333;
+    }
+
+    .points-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ff8c00;
+    }
+  }
+
+  // NEU: Rewards Section
+  .rewards-section {
+    background: #f0f8ff;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+
+    h3 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      color: var(--text-main);
+    }
+
+    .reward-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+
+      .reward-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .reward-name {
+          font-weight: 600;
+          color: var(--text-main);
+        }
+
+        .reward-cost {
+          font-size: 0.85rem;
+          color: var(--primary);
+        }
+      }
+
+      .redeem-btn {
+        padding: 8px 16px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover:not(.disabled) {
+          background: var(--primary-hover);
+        }
+
+        &.disabled {
+          background: #ccc;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .reward-hint {
+      margin: 8px 0 0;
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      text-align: center;
+    }
+  }
+}
+
+// --- EMPTY STATE ---
+.empty-cart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+}
+
+.empty-content {
+  text-align: center;
+  background: var(--surface);
+  padding: 60px 40px;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  max-width: 400px;
+
+
+  h2 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+  }
+
+  p {
+    color: var(--text-sub);
+    margin-bottom: 30px;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 14px 30px;
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--radius-btn);
+    font-weight: 700;
+    transition: background 0.2s;
+
+    &:hover {
+      background: var(--primary-hover);
+    }
+  }
+}

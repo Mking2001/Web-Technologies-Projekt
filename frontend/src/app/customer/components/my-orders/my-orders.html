@@ -1,0 +1,59 @@
+<div class="page-wrapper">
+  <nav class="top-nav">
+    <div class="nav-content">
+      <div class="brand" (click)="goBack()">Hol & Lauf</div>
+      <button class="text-btn" (click)="goBack()">Zurück zu den Restaurants</button>
+    </div>
+  </nav>
+
+  <main class="content-container">
+    <h1 class="page-title">Meine Bestellungen</h1>
+
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Bestellverlauf wird geladen...</p>
+      </div>
+    }
+
+    @else {
+      @if (orders().length > 0) {
+        <div class="orders-list">
+          @for (order of orders(); track order.id) {
+            <div class="order-card" (click)="goToTracking(order.id)">
+              <div class="order-header">
+                <div class="restaurant-info">
+                  <h3>{{ order.restaurant_name }}</h3>
+                  <p class="order-date">{{ order.created_at | date:'dd.MM.yyyy, HH:mm' }} Uhr</p>
+                </div>
+                <div class="status-badge" [attr.data-status]="order.status">
+                  {{ order.status }}
+                </div>
+              </div>
+
+              <div class="order-body">
+                <p class="item-summary">{{ order.item_count }} Artikel bestellt</p>
+                <div class="order-total">
+                  <span>Gesamtsumme</span>
+                  <span class="price">{{ order.total_price | currency:'EUR' }}</span>
+                </div>
+              </div>
+
+              <div class="order-footer">
+                <span class="tracking-link">Bestellung verfolgen</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      @else {
+        <div class="empty-state">
+          <h2>Noch keine Bestellungen</h2>
+          <p>Es sieht so aus, als hättest du noch nichts bestellt. Zeit für deine erste Pizza!</p>
+          <button class="primary-btn" (click)="goBack()">Jetzt Restaurants entdecken</button>
+        </div>
+      }
+    }
+  </main>
+</div>

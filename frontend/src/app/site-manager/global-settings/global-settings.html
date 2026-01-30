@@ -1,0 +1,58 @@
+<h2>Gobal Platform Settings</h2>
+
+<div class="settings-grid">
+    
+    <div class="settings-card">
+        <div class="card-header">
+            <h3>Fees & Economics</h3>
+        </div>
+        <div class="card-body">
+            
+            <div class="form-group">
+                <label>Platform Fee (%)</label>
+                <input type="number" [(ngModel)]="settings.platform_fee_percent" placeholder="e.g. 10">
+                <small>Percentage taken from each order.</small>
+            </div>
+            
+            <div class="form-group">
+                <label>Delivery Base Fee (€)</label>
+                <input type="number" [(ngModel)]="settings.delivery_fee_base">
+            </div>
+
+            <button class="btn-save" (click)="saveSettings()">Save Changes</button>
+        </div>
+    </div>
+
+    <div class="settings-card">
+        <div class="card-header">
+            <h3>Active Promo Codes</h3>
+        </div>
+        <div class="new-code-row">
+            <input type="text" [(ngModel)]="newCodeStr" placeholder="Code (e.g. FOOD2025)">
+            <input type="number" [(ngModel)]="newCodePercent" placeholder="%" style="width: 60px;">
+            <button class="btn-add" (click)="addCode()">+</button>
+        </div>
+
+        <ul class="promo-list">
+            <li *ngFor="let promo of promoCodes">
+                <span><strong>{{ promo.code }}</strong> ({{ promo.discount_percent }}%)</span>
+                <button class="btn-delete" (click)="deleteCode(promo.code)">×</button>
+            </li>
+            <li *ngIf="promoCodes.length === 0">Keine Codes aktiv.</li>
+        </ul>
+    </div>
+
+    <div class="settings-card full-width">
+        <div class="card-header">
+            <h3>Allowed Delivery Zones (JSON Configuration)</h3>
+        </div>
+        <div class="card-body">
+            <textarea rows="8" [(ngModel)]="zonesJsonString" style="width: 100%; font-family: monospace;"></textarea>
+            <small>Please ensure valid JSON syntax.</small>
+            
+            <br><br>
+            <button class="btn-save" (click)="saveSettings()">Update Zones & Fees</button>
+        </div>
+    </div>
+
+</div>
