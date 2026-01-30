@@ -3,10 +3,6 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
-/**
- * Berichte-Komponente für Site-Manager.
- * Zeigt Analytics und Aktivitätsprotokolle.
- */
 @Component({
   selector: 'app-reports',
   standalone: true,
@@ -15,31 +11,19 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./reports.scss']
 })
 export class ReportsComponent implements OnInit {
-
-  // ============ STATE ============
-  /** Analytics-Daten (Umsatz, Logins) */
+  // Analytics Daten
   analyticsData: any = { revenue: [], logins: [] };
 
-  /** Aktivitätsprotokolle */
+  // Activity Log Daten (Pagination)
   logs: any[] = [];
-
-  // ============ PAGINATION STATE ============
-  /** Aktuelle Seite */
   currentPage = 1;
-  /** Einträge pro Seite */
   pageSize = 10;
-  /** Gesamtseiten */
   totalPages = 1;
-  /** Gesamtanzahl */
   totalItems = 0;
-
-  /** Suchbegriff */
   searchTerm = '';
 
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) { }
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {}
 
-  // ============ LIFECYCLE ============
-  /** Lädt Analytics und Logs (nur Browser) */
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.loadAnalytics();
@@ -47,8 +31,6 @@ export class ReportsComponent implements OnInit {
     }
   }
 
-  // ============ LOAD METHODS ============
-  /** Lädt Analytics-Daten */
   loadAnalytics() {
     this.http.get<any>('http://localhost:3000/api/reports/analytics').subscribe({
       next: (data) => this.analyticsData = data,
@@ -56,7 +38,6 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  /** Lädt paginierte Aktivitätsprotokolle */
   loadLogs() {
     const url = `http://localhost:3000/api/reports/activity?page=${this.currentPage}&limit=${this.pageSize}&search=${this.searchTerm}`;
     this.http.get<any>(url).subscribe({
@@ -68,15 +49,11 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  // ============ FILTER METHODS ============
-  /** Führt Suche aus */
   onSearch() {
     this.currentPage = 1;
     this.loadLogs();
   }
 
-  // ============ PAGINATION METHODS ============
-  /** Geht zur vorherigen Seite */
   prevPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
@@ -84,7 +61,6 @@ export class ReportsComponent implements OnInit {
     }
   }
 
-  /** Geht zur nächsten Seite */
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;

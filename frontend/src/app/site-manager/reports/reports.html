@@ -16,8 +16,8 @@
         <div class="chart-card">
             <h3>User Logins (Last 7 Days)</h3>
             <div class="bar-chart">
-                <div *ngFor=\"let item of analyticsData.logins\" class=\"bar-group\">\r\n <div class=\"bar blue\"
-                        [style.height.px]=\"Math.min(item.count * 10, 100)\" [title]=\"item.count\"></div>
+                <div *ngFor="let item of analyticsData.logins" class="bar-group">
+                    <div class="bar blue" [style.height.px]="item.count * 10" [title]="item.count"></div>
                     <span class="label">{{ item.date | date:'dd.MM' }}</span>
                 </div>
                 <div *ngIf="analyticsData.logins.length === 0" class="no-data">No data yet</div>
